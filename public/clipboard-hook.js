@@ -10,6 +10,7 @@
   const CONTENT_SOURCE = "signavio-bpkeys-content";
   const CLIPBOARD_PATH = "/p/clipboard";
   const BPMN_NAMESPACE = "http://b3mn.org/stencilset/bpmn2.0#";
+
   let lastClipboardHeaders = {};
   let lastClipboardParams = null;
 
@@ -136,6 +137,34 @@
     return next;
   };
 
+  const paramsToTemplateEntries = (params) => {
+    const entries = [];
+    for (const [key, value] of params.entries()) {
+      if (key === "value_json") {
+        continue;
+      }
+
+      entries.push([key, value]);
+    }
+
+    return entries;
+  };
+
+  const templateEntriesToParams = (entries) => {
+    const params = new URLSearchParams();
+    if (!Array.isArray(entries)) {
+      return params;
+    }
+
+    for (const entry of entries) {
+      if (Array.isArray(entry) && entry.length >= 2) {
+        params.append(String(entry[0]), String(entry[1]));
+      }
+    }
+
+    return params;
+  };
+
   const getCookieValue = (name) => {
     const all = document.cookie || "";
     const parts = all.split(";");
@@ -164,7 +193,7 @@
     );
   };
 
-  const emitCapture = (valueJsonText, namespace, source) => {
+  const emitCapture = (valueJsonText, namespace, source, requestTemplate) => {
     if (!valueJsonText) {
       return;
     }
@@ -183,6 +212,7 @@
           namespace: namespace || BPMN_NAMESPACE,
           capturedAt: Date.now(),
           source,
+          requestTemplate,
         },
       },
       window.location.origin,
@@ -203,14 +233,25 @@
     }
 
     lastClipboardParams = cloneSearchParams(params);
-    emitCapture(params.get("value_json"), params.get("namespace"), source);
+    emitCapture(params.get("value_json"), params.get("namespace"), source, {
+      headers: { ...lastClipboardHeaders },
+      params: paramsToTemplateEntries(params),
+    });
   };
 
-  const writeClipboard = async (requestId, valueJson, namespace) => {
+  const writeClipboard = async (requestId, valueJson, namespace, requestTemplate) => {
     try {
-      const params = lastClipboardParams
-        ? cloneSearchParams(lastClipboardParams)
-        : new URLSearchParams();
+      const templateParams =
+        requestTemplate && Array.isArray(requestTemplate.params)
+          ? templateEntriesToParams(requestTemplate.params)
+          : null;
+
+      const params = templateParams
+        ? templateParams
+        : lastClipboardParams
+          ? cloneSearchParams(lastClipboardParams)
+          : new URLSearchParams();
+
       params.set("value_json", JSON.stringify(valueJson));
       params.set("namespace", namespace || BPMN_NAMESPACE);
 
@@ -218,6 +259,9 @@
       const headers = {
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
         "x-requested-with": "XMLHttpRequest",
+        ...(requestTemplate && typeof requestTemplate.headers === "object"
+          ? requestTemplate.headers
+          : {}),
         ...lastClipboardHeaders,
       };
 
@@ -325,16 +369,32 @@
     }
 
     const data = event.data;
-    if (
-      !data ||
-      data.source !== CONTENT_SOURCE ||
-      data.type !== "clipboard-write-request" ||
-      typeof data.requestId !== "string" ||
-      !data.payload
-    ) {
+    if (!data || data.source !== CONTENT_SOURCE || typeof data.type !== "string") {
       return;
     }
 
-    writeClipboard(data.requestId, data.payload.valueJson, data.payload.namespace);
+    if (data.type === "clipboard-template-bootstrap" && data.template) {
+      if (data.template.headers && typeof data.template.headers === "object") {
+        lastClipboardHeaders = { ...data.template.headers };
+      }
+
+      if (Array.isArray(data.template.params)) {
+        lastClipboardParams = templateEntriesToParams(data.template.params);
+      }
+      return;
+    }
+
+    if (
+      data.type === "clipboard-write-request" &&
+      typeof data.requestId === "string" &&
+      data.payload
+    ) {
+      writeClipboard(
+        data.requestId,
+        data.payload.valueJson,
+        data.payload.namespace,
+        data.payload.requestTemplate,
+      );
+    }
   });
 })();

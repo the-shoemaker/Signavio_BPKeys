@@ -1,6 +1,7 @@
 import { sanitizePayloadForReuse } from "../shared/payload";
+import type { ClipboardRequestTemplate } from "../shared/types";
 
-const CONTENT_SOURCE = "signavio-bpkeys-content";
+export const CONTENT_SOURCE = "signavio-bpkeys-content";
 
 export type ClipboardWriteRequestMessage = {
   source: typeof CONTENT_SOURCE;
@@ -9,6 +10,7 @@ export type ClipboardWriteRequestMessage = {
   payload: {
     valueJson: unknown;
     namespace: string;
+    requestTemplate?: ClipboardRequestTemplate;
   };
 };
 
@@ -41,6 +43,7 @@ export function buildClipboardWriteRequest(
   input: {
     payload: unknown;
     namespace: string;
+    requestTemplate?: ClipboardRequestTemplate;
   },
   options?: {
     sanitize?: boolean;
@@ -56,6 +59,7 @@ export function buildClipboardWriteRequest(
     payload: {
       valueJson: useSanitizedPayload ? sanitizePayloadForReuse(input.payload) : input.payload,
       namespace: input.namespace,
+      requestTemplate: input.requestTemplate,
     },
   };
 }

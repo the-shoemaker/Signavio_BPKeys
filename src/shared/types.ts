@@ -1,10 +1,16 @@
 export type ClipboardSource = "fetch" | "xhr" | "manual";
 
+export type ClipboardRequestTemplate = {
+  headers: Record<string, string>;
+  params: Array<[string, string]>;
+};
+
 export type ClipboardCapture = {
   valueJson: unknown;
   namespace: string;
   capturedAt: number;
   source: ClipboardSource;
+  requestTemplate?: ClipboardRequestTemplate;
 };
 
 export type Favorite = {
@@ -12,6 +18,7 @@ export type Favorite = {
   name: string;
   payload: unknown;
   namespace: string;
+  requestTemplate?: ClipboardRequestTemplate;
   order: number;
   createdAt: number;
   updatedAt: number;

@@ -16,28 +16,32 @@ Updated: 2026-03-06
   - Intercepts both `fetch` and `XMLHttpRequest` POST calls to `/p/clipboard`
   - Captures and persists latest `value_json` + `namespace` payload
 - Clipboard write reliability updates
-  - Clipboard write performed in page context
-  - Reuses auth/CSRF headers observed from successful copy calls
-  - Adds CSRF fallback token sources
-  - Retries with raw payload if sanitized payload write fails
+  - Clipboard write performed in page context to `/p/clipboard`
+  - Reuses captured auth/CSRF headers and full clipboard form-template fields
+  - Persists request template in favorites and latest capture
+  - Bootstraps template back into page hook on startup/reload
+  - Raw payload first, sanitized payload fallback on failure
 - Favorites data model and storage
   - Implemented typed models (`ClipboardCapture`, `Favorite`)
   - Implemented storage helpers for create/read/delete/reorder flows
   - Fixed reorder persistence bug (stored order now reflects UI order)
-  - Favorites now store raw payload (sanitize deferred to insert)
+  - New favorites inserted at beginning of list
 - Payload portability for cross-workspace reuse
   - Added payload sanitizer (`src/shared/payload.ts`)
-  - Rewrites snippet `resourceId` values
-  - Applies default top-level placement
+  - Rewrites snippet `resourceId` values and applies default placement when needed
 - Overlay UI and interaction stability pass
-  - Darker transparent panel with thin light outline
-  - Reduced blur intensity and more compact layout
-  - Search icon + fixed top search area
-  - Scrollable components list area only
+  - Darker transparent compact panel with thin light outline
+  - Fixed search/header area, scroll only on component list
   - Explicit `search` vs `list` input mode model
-  - Enter closes panel and inserts in list actions
-  - `Option+Delete` removes selected favorite (to avoid search conflicts)
-  - `Option+Up/Down` reorders selected favorite
+  - Enter inserts/closes reliably
+  - `Option+Delete` removes selected favorite
+  - Delete selection now shifts to left neighbor
+- Preview rendering
+  - Expanded BPMN icon coverage (task/subprocess/gateway variants/event variants/flows/data/pool-lane/annotation/message)
+  - Simplified large icon model: big yellow shape reflects BPMN element only (no content/type variation in main icon)
+  - Added chained top-right context badges (task subtype/content/event/context markers)
+  - Non-rounded shapes render without yellow background container
+  - Increased card/icon size and added SVG viewBox safety margin to prevent clipped outlines
 
 ## Validation Run (Local)
 
@@ -48,14 +52,9 @@ Updated: 2026-03-06
 ## Next
 
 1. Manual Signavio verification with latest build
-   - Confirm `/p/clipboard` insert no longer returns 401
-   - Confirm insert then `Cmd/Ctrl+V` works for saved favorites
-2. Validate behavior matrix
-   - Search-mode delete does not affect canvas
-   - List-mode `Option+Delete` delete works
-   - List-mode `Option+Up/Down` reorder works
-3. Validate portability
-   - Same favorite across at least 2 workspaces
-   - Single-shape and multi-shape snippets
-4. Optional enhancement
-   - Optional direct auto-paste mode after successful clipboard write
+   - Confirm persisted favorites still insert after extension reload/restart
+   - Confirm no 401 on `/p/clipboard` write after restart
+2. Verify icon edge cases
+   - Additional BPMN stencils not yet mapped use fallback icon
+3. Optional enhancement
+   - Auto-paste mode toggle after successful clipboard write

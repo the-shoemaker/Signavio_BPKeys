@@ -10,6 +10,52 @@ type StorageShape = {
 
 const clone = <T>(value: T): T => structuredClone(value);
 
+const normalizeName = (value: string): string => {
+  return value.trim().replace(/\s+/g, " ");
+};
+
+const escapeRegExp = (value: string): string => {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
+const makeUniqueFavoriteName = (proposedName: string, favorites: Favorite[]): string => {
+  const cleaned = normalizeName(proposedName);
+  if (!cleaned) {
+    return "Favorite";
+  }
+
+  const hasExactDuplicate = favorites.some(
+    (favorite) => normalizeName(favorite.name).toLowerCase() === cleaned.toLowerCase(),
+  );
+  if (!hasExactDuplicate) {
+    return cleaned;
+  }
+
+  const baseMatch = cleaned.match(/^(.*?)(?:\s+(\d+))?$/);
+  const base = normalizeName(baseMatch?.[1] ?? cleaned);
+  const suffixPattern = new RegExp(`^${escapeRegExp(base)}(?:\\s+(\\d+))?$`, "i");
+  const usedNumbers = new Set<number>();
+
+  for (const favorite of favorites) {
+    const normalized = normalizeName(favorite.name);
+    const match = normalized.match(suffixPattern);
+    if (!match) {
+      continue;
+    }
+
+    if (match[1]) {
+      usedNumbers.add(Number(match[1]));
+    }
+  }
+
+  let nextNumber = 1;
+  while (usedNumbers.has(nextNumber)) {
+    nextNumber += 1;
+  }
+
+  return `${base} ${nextNumber}`;
+};
+
 const sortFavorites = (favorites: Favorite[]): Favorite[] => {
   return [...favorites].sort((a, b) => {
     if (a.order !== b.order) {
@@ -63,17 +109,19 @@ export async function addFavorite(
 ): Promise<Favorite> {
   const favorites = await getFavorites();
   const now = Date.now();
+  const uniqueName = makeUniqueFavoriteName(name, favorites);
   const favorite: Favorite = {
     id: crypto.randomUUID(),
-    name: name.trim(),
+    name: uniqueName,
     payload: clone(capture.valueJson),
     namespace: capture.namespace,
+    requestTemplate: capture.requestTemplate ? clone(capture.requestTemplate) : undefined,
     order: favorites.length,
     createdAt: now,
     updatedAt: now,
   };
 
-  favorites.push(favorite);
+  favorites.unshift(favorite);
   await setFavorites(favorites);
   return favorite;
 }

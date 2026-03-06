@@ -9,6 +9,7 @@ import {
 import {
   buildClipboardWriteRequest,
   isClipboardWriteResultMessage,
+  CONTENT_SOURCE as CLIPBOARD_CONTENT_SOURCE,
   type ClipboardWriteResultMessage,
 } from "../src/content/signavio-clipboard";
 import { FavoritesOverlay } from "../src/content/overlay";
@@ -70,11 +71,17 @@ const isClipboardCapture = (value: unknown): value is ClipboardCapture => {
   }
 
   const candidate = value as Record<string, unknown>;
+  const templateValid =
+    !("requestTemplate" in candidate) ||
+    candidate.requestTemplate === undefined ||
+    (typeof candidate.requestTemplate === "object" && candidate.requestTemplate !== null);
+
   return (
     typeof candidate.namespace === "string" &&
     typeof candidate.capturedAt === "number" &&
     (candidate.source === "fetch" || candidate.source === "xhr" || candidate.source === "manual") &&
-    "valueJson" in candidate
+    "valueJson" in candidate &&
+    templateValid
   );
 };
 
@@ -113,12 +120,14 @@ const resolvePendingWrite = (data: ClipboardWriteResultMessage): void => {
 const writeFavoriteToClipboard = async (favorite: {
   payload: unknown;
   namespace: string;
+  requestTemplate?: ClipboardCapture["requestTemplate"];
 }): Promise<void> => {
   const sendWriteRequest = async (sanitize: boolean): Promise<void> => {
     const request = buildClipboardWriteRequest(
       {
         payload: favorite.payload,
         namespace: favorite.namespace,
+        requestTemplate: favorite.requestTemplate,
       },
       { sanitize },
     );
@@ -135,12 +144,12 @@ const writeFavoriteToClipboard = async (favorite: {
   };
 
   try {
-    await sendWriteRequest(true);
+    await sendWriteRequest(false);
   } catch (firstError) {
-    // Fallback: retry with raw payload if sanitized payload is rejected by server.
-    await sendWriteRequest(false).catch((secondError) => {
+    // Fallback: retry with sanitized payload if raw payload is rejected by server.
+    await sendWriteRequest(true).catch((secondError) => {
       throw new Error(
-        `Clipboard write failed (sanitized + raw). First: ${String(firstError)}. Second: ${String(secondError)}`,
+        `Clipboard write failed (raw + sanitized). First: ${String(firstError)}. Second: ${String(secondError)}`,
       );
     });
   }
@@ -228,6 +237,28 @@ export default defineContentScript({
   runAt: "document_idle",
   main() {
     injectClipboardHook();
+
+    void (async () => {
+      const latest = await getLatestCapture();
+      const templateFromLatest = latest?.requestTemplate;
+      const templateFromFavorites = !templateFromLatest
+        ? (await getFavorites()).find((favorite) => favorite.requestTemplate)?.requestTemplate
+        : undefined;
+      const requestTemplate = templateFromLatest ?? templateFromFavorites;
+
+      if (!requestTemplate) {
+        return;
+      }
+
+      window.postMessage(
+        {
+          source: CLIPBOARD_CONTENT_SOURCE,
+          type: "clipboard-template-bootstrap",
+          template: requestTemplate,
+        },
+        window.location.origin,
+      );
+    })();
 
     window.addEventListener("message", async (event: MessageEvent) => {
       if (event.source !== window || event.origin !== window.location.origin) {
