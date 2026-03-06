@@ -1,0 +1,21 @@
+{
+  "name": "signavio-bpkeys",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt --browser firefox",
+    "prepare:types": "wxt prepare",
+    "build": "wxt build --browser firefox",
+    "zip": "wxt zip --browser firefox",
+    "typecheck": "npm run prepare:types && tsc --noEmit"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^120.0.4",
+    "typescript": "^5.8.2",
+    "wxt": "^0.20.7"
+  }
+}
