@@ -4,13 +4,13 @@ export default defineConfig({
   srcDir: ".",
   modules: [],
   manifest: {
-    name: "Signavio BPKeys",
+    name: "Sigtastic",
     description: "Quickly insert favorite Signavio BPMN snippets from a keyboard-first overlay.",
     permissions: ["storage", "tabs", "activeTab"],
     host_permissions: ["*://*.signavio.com/*"],
     browser_specific_settings: {
       gecko: {
-        id: "signavio-bpkeys@example.local",
+        id: "sigtastic@example.local",
       },
     },
     commands: {
@@ -19,7 +19,7 @@ export default defineConfig({
           default: "Alt+Shift+D",
           mac: "Alt+Shift+D",
         },
-        description: "Open Signavio BPKeys overlay",
+        description: "Open Sigtastic overlay",
       },
       "save-favorite": {
         suggested_key: {

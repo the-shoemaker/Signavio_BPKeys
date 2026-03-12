@@ -4,7 +4,8 @@ import { preparePayloadForFavoriteStorage } from "./payload";
 const FAVORITES_KEY = "favorites";
 const FAVORITES_BACKUPS_KEY = "favoritesBackups";
 const LAST_CAPTURE_KEY = "lastCapture";
-const FAVORITES_MIRROR_KEY = "bpkeys.favorites.mirror.v1";
+const FAVORITES_MIRROR_KEY = "sigtastic.favorites.mirror.v1";
+const LEGACY_FAVORITES_MIRROR_KEY = "bpkeys.favorites.mirror.v1";
 const MAX_FAVORITES_BACKUPS = 6;
 
 type StorageShape = {
@@ -148,14 +149,14 @@ const getMirrorStorage = (): Storage | null => {
   return null;
 };
 
-const readMirroredFavorites = (): Favorite[] => {
+const readMirroredFavoritesFromKey = (key: string): Favorite[] => {
   const storage = getMirrorStorage();
   if (!storage) {
     return [];
   }
 
   try {
-    const raw = storage.getItem(FAVORITES_MIRROR_KEY);
+    const raw = storage.getItem(key);
     if (!raw) {
       return [];
     }
@@ -167,6 +168,15 @@ const readMirroredFavorites = (): Favorite[] => {
   }
 };
 
+const readMirroredFavorites = (): Favorite[] => {
+  const current = readMirroredFavoritesFromKey(FAVORITES_MIRROR_KEY);
+  if (current.length > 0) {
+    return current;
+  }
+
+  return readMirroredFavoritesFromKey(LEGACY_FAVORITES_MIRROR_KEY);
+};
+
 const writeMirroredFavorites = (favorites: Favorite[]): void => {
   const storage = getMirrorStorage();
   if (!storage) {
@@ -176,6 +186,7 @@ const writeMirroredFavorites = (favorites: Favorite[]): void => {
   try {
     if (favorites.length === 0) {
       storage.removeItem(FAVORITES_MIRROR_KEY);
+      storage.removeItem(LEGACY_FAVORITES_MIRROR_KEY);
       return;
     }
 
@@ -186,6 +197,7 @@ const writeMirroredFavorites = (favorites: Favorite[]): void => {
         favorites,
       }),
     );
+    storage.removeItem(LEGACY_FAVORITES_MIRROR_KEY);
   } catch {
     // Ignore mirror write failures; primary storage remains the source of truth.
   }

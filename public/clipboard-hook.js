@@ -1,13 +1,13 @@
 (() => {
-  const FLAG = "__bpkeysClipboardHookInstalled";
+  const FLAG = "__sigtasticClipboardHookInstalled";
   if (window[FLAG]) {
     return;
   }
 
   window[FLAG] = true;
 
-  const MESSAGE_SOURCE = "signavio-bpkeys-hook";
-  const CONTENT_SOURCE = "signavio-bpkeys-content";
+  const MESSAGE_SOURCE = "sigtastic-hook";
+  const CONTENT_SOURCE = "sigtastic-content";
   const CLIPBOARD_PATH = "/p/clipboard";
   const BPMN_NAMESPACE = "http://b3mn.org/stencilset/bpmn2.0#";
 
@@ -3191,7 +3191,7 @@
     };
   };
 
-  window.__bpkeysQuickEditDebug = () => {
+  window.__sigtasticQuickEditDebug = () => {
     const facade = findEditorFacade();
     const selection = facade ? getFacadeSelection(facade) : [];
     const shapes = facade ? getSelectedShapes(facade) : [];
@@ -3209,7 +3209,7 @@
     };
   };
 
-  window.__bpkeysQuickEditCandidates = () => {
+  window.__sigtasticQuickEditCandidates = () => {
     const seen = new Set();
     const candidates = [];
     const propertyBudget = { count: 280 };
@@ -3244,7 +3244,7 @@
     });
   };
 
-  window.__bpkeysLastPointerDebug = () => {
+  window.__sigtasticLastPointerDebug = () => {
     const target = lastPointerTarget instanceof Element ? lastPointerTarget : null;
     if (!target) {
       return {
@@ -3267,7 +3267,7 @@
     };
   };
 
-  window.__bpkeysFindPointerShapeRefs = () => {
+  window.__sigtasticFindPointerShapeRefs = () => {
     const targetId = getPointerShapeId();
     return {
       targetId,
@@ -3275,7 +3275,7 @@
     };
   };
 
-  window.__bpkeysPointerBindings = () => {
+  window.__sigtasticPointerBindings = () => {
     const target = lastPointerTarget instanceof Element ? lastPointerTarget : null;
     if (!target) {
       return { hasTarget: false };
@@ -3341,7 +3341,7 @@
     };
   };
 
-  window.__bpkeysPrototypeStorage = () => {
+  window.__sigtasticPrototypeStorage = () => {
     const target = lastPointerTarget instanceof Element ? lastPointerTarget : null;
     if (!target) {
       return { hasTarget: false };
@@ -3390,7 +3390,7 @@
     };
   };
 
-  window.__bpkeysVisibleActionables = () => {
+  window.__sigtasticVisibleActionables = () => {
     const selectors = [
       "button",
       "[role='button']",
@@ -3445,7 +3445,7 @@
     return results;
   };
 
-  window.__bpkeysTaskTypeDom = () => {
+  window.__sigtasticTaskTypeDom = () => {
     const labels = [
       "User Task",
       "Manual Task",
@@ -3498,7 +3498,7 @@
     return results;
   };
 
-  window.__bpkeysTaskTypeExt = () => {
+  window.__sigtasticTaskTypeExt = () => {
     return getExtComponents()
       .map((component) => summarizeExtComponent(component))
       .filter((summary) => {
@@ -3519,7 +3519,7 @@
       .slice(0, 80);
   };
 
-  window.__bpkeysTaskTypePropertyContext = () => {
+  window.__sigtasticTaskTypePropertyContext = () => {
     const context = findTaskTypePropertyContext();
     if (!context) {
       return { found: false };
@@ -3545,7 +3545,7 @@
     };
   };
 
-  window.__bpkeysBootstrapDebug = async () => {
+  window.__sigtasticBootstrapDebug = async () => {
     const before = getBootstrapSnapshot();
     const primed = await primeTaskTypePropertyContext();
     const after = getBootstrapSnapshot();
@@ -3557,7 +3557,7 @@
     };
   };
 
-  window.__bpkeysTaskTypeRowDebug = () => {
+  window.__sigtasticTaskTypeRowDebug = () => {
     const rowParts = findTaskTypeRowElements();
     const ext = window.Ext;
     const getCmp = ext && typeof ext.getCmp === "function" ? ext.getCmp.bind(ext) : null;
@@ -3798,24 +3798,24 @@
   );
 
   XMLHttpRequest.prototype.open = function patchedOpen(method, url, ...rest) {
-    this.__bpkeysMethod = method;
-    this.__bpkeysUrl = url;
-    this.__bpkeysHeaders = {};
+    this.__sigtasticMethod = method;
+    this.__sigtasticUrl = url;
+    this.__sigtasticHeaders = {};
     return nativeOpen.call(this, method, url, ...rest);
   };
 
   XMLHttpRequest.prototype.setRequestHeader = function patchedSetRequestHeader(name, value) {
-    if (!this.__bpkeysHeaders) {
-      this.__bpkeysHeaders = {};
+    if (!this.__sigtasticHeaders) {
+      this.__sigtasticHeaders = {};
     }
 
-    this.__bpkeysHeaders[String(name).toLowerCase()] = String(value);
+    this.__sigtasticHeaders[String(name).toLowerCase()] = String(value);
     return nativeSetRequestHeader.call(this, name, value);
   };
 
   XMLHttpRequest.prototype.send = function patchedSend(body) {
     try {
-      parseAndEmit(this.__bpkeysUrl, this.__bpkeysMethod, body, "xhr", this.__bpkeysHeaders);
+      parseAndEmit(this.__sigtasticUrl, this.__sigtasticMethod, body, "xhr", this.__sigtasticHeaders);
     } catch {
       // Ignore parse errors and preserve native request behavior.
     }

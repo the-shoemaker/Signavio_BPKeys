@@ -22,7 +22,7 @@ import type {
 } from "../src/shared/types";
 import { getPrimaryShapeInfo, getSuggestedFavoriteName } from "../src/shared/payload";
 
-const MESSAGE_SOURCE = "signavio-bpkeys-hook";
+const MESSAGE_SOURCE = "sigtastic-hook";
 let overlay: FavoritesOverlay | null = null;
 let quickMenu: QuickTypeMenu | null = null;
 
@@ -287,12 +287,12 @@ const isEditorSelectionInfo = (value: unknown): value is EditorSelectionInfo => 
 };
 
 const injectClipboardHook = () => {
-  if (document.getElementById("bpkeys-clipboard-hook")) {
+  if (document.getElementById("sigtastic-clipboard-hook")) {
     return;
   }
 
   const script = document.createElement("script");
-  script.id = "bpkeys-clipboard-hook";
+  script.id = "sigtastic-clipboard-hook";
   script.src = browser.runtime.getURL("clipboard-hook.js");
   script.async = false;
   script.onload = () => {
@@ -479,7 +479,7 @@ const ensureOverlay = (): FavoritesOverlay => {
         await writeFavoriteToClipboard(favorite);
         toast(`Loaded favorite: ${favorite.name}. Press Cmd/Ctrl+V to paste.`);
       } catch (error) {
-        console.error("[BPKeys] Failed to write favorite payload", error);
+        console.error("[Sigtastic] Failed to write favorite payload", error);
         const message = error instanceof Error ? error.message : String(error);
         toast(`Clipboard write failed: ${message.slice(0, 120)}`);
       }
@@ -632,17 +632,17 @@ const handleToggleQuickMenu = async () => {
 };
 
 const handleBackgroundMessage = async (message: ContentMessage) => {
-  if (message.type === "BPKEYS_SAVE_FAVORITE") {
+  if (message.type === "SIGTASTIC_SAVE_FAVORITE") {
     await handleSaveFavorite();
     return;
   }
 
-  if (message.type === "BPKEYS_TOGGLE_OVERLAY") {
+  if (message.type === "SIGTASTIC_TOGGLE_OVERLAY") {
     await handleToggleOverlay();
     return;
   }
 
-  if (message.type === "BPKEYS_TOGGLE_QUICK_MENU") {
+  if (message.type === "SIGTASTIC_TOGGLE_QUICK_MENU") {
     await handleToggleQuickMenu();
   }
 };

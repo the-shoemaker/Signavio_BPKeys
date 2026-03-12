@@ -53,7 +53,7 @@ Updated: 2026-03-09
   - Added page-hook editor bridge (`editor-query-*`, `editor-action-*`) to query selection and trigger actions
   - Task-type and duplicate execution are implemented as best-effort Signavio/Oryx facade hooks with fallbacks
   - Selection detection widened to support getter-based and state-based selection storage, plus shallow recursive facade discovery
-  - Added page debug helper `window.__bpkeysQuickEditDebug()` for tenant/runtime inspection
+  - Added page debug helper `window.__sigtasticQuickEditDebug()` for tenant/runtime inspection
 - Preview rendering
   - Expanded BPMN icon coverage (task/subprocess/gateway variants/event variants/flows/data/pool-lane/annotation/message)
   - Simplified large icon model: big yellow shape reflects BPMN element only

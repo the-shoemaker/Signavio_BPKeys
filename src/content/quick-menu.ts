@@ -71,42 +71,42 @@ export class QuickTypeMenu {
     this.supportsCssAnchors = false;
 
     this.host = document.createElement("div");
-    this.host.id = "bpkeys-quick-menu-host";
+    this.host.id = "sigtastic-quick-menu-host";
     this.root = this.host.attachShadow({ mode: "open" });
 
     const style = document.createElement("style");
     style.textContent = this.getStyles();
 
     this.wrapper = document.createElement("div");
-    this.wrapper.className = "bpkeys-quick-wrapper";
+    this.wrapper.className = "sigtastic-quick-wrapper";
 
     const scrim = document.createElement("div");
-    scrim.className = "bpkeys-quick-scrim";
+    scrim.className = "sigtastic-quick-scrim";
     scrim.addEventListener("pointerdown", () => this.close());
 
     this.anchor = document.createElement("div");
-    this.anchor.className = "bpkeys-quick-anchor";
+    this.anchor.className = "sigtastic-quick-anchor";
 
     this.panel = document.createElement("section");
-    this.panel.className = "bpkeys-quick-panel";
+    this.panel.className = "sigtastic-quick-panel";
     this.panel.addEventListener("pointerdown", (event) => event.stopPropagation());
     this.panel.addEventListener("click", (event) => event.stopPropagation());
 
     const header = document.createElement("div");
-    header.className = "bpkeys-quick-header";
+    header.className = "sigtastic-quick-header";
 
     const title = document.createElement("h2");
-    title.className = "bpkeys-quick-title";
+    title.className = "sigtastic-quick-title";
     title.textContent = "Change Type";
 
     this.subtitle = document.createElement("div");
-    this.subtitle.className = "bpkeys-quick-subtitle";
+    this.subtitle.className = "sigtastic-quick-subtitle";
 
     const divider = document.createElement("div");
-    divider.className = "bpkeys-quick-divider";
+    divider.className = "sigtastic-quick-divider";
 
     this.list = document.createElement("div");
-    this.list.className = "bpkeys-quick-list";
+    this.list.className = "sigtastic-quick-list";
     this.list.setAttribute("role", "listbox");
     this.list.setAttribute("aria-label", "Task type options");
 
@@ -179,7 +179,7 @@ export class QuickTypeMenu {
     for (const [index, option] of TASK_TYPE_OPTIONS.entries()) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "bpkeys-quick-option";
+      button.className = "sigtastic-quick-option";
       button.dataset.selected = String(index === this.selectedIndex);
       button.dataset.current = String(option.id === this.currentTaskType);
       button.setAttribute("role", "option");
@@ -199,16 +199,16 @@ export class QuickTypeMenu {
       });
 
       const icon = document.createElement("span");
-      icon.className = "bpkeys-quick-icon";
+      icon.className = "sigtastic-quick-icon";
       icon.setAttribute("aria-hidden", "true");
       icon.innerHTML = this.getTaskTypeIconSvg(option.id);
 
       const label = document.createElement("span");
-      label.className = "bpkeys-quick-label";
+      label.className = "sigtastic-quick-label";
       label.textContent = option.label;
 
       const shortcut = document.createElement("span");
-      shortcut.className = "bpkeys-quick-shortcut";
+      shortcut.className = "sigtastic-quick-shortcut";
       shortcut.textContent = getOptionHintNumber(index);
       shortcut.setAttribute("aria-hidden", "true");
 
@@ -216,7 +216,7 @@ export class QuickTypeMenu {
 
       if (option.id === this.currentTaskType) {
         const currentBadge = document.createElement("span");
-        currentBadge.className = "bpkeys-quick-current";
+        currentBadge.className = "sigtastic-quick-current";
         currentBadge.textContent = "Current";
         button.append(currentBadge);
       }
@@ -633,7 +633,7 @@ export class QuickTypeMenu {
         box-sizing: border-box;
       }
 
-      .bpkeys-quick-wrapper {
+      .sigtastic-quick-wrapper {
         position: fixed;
         inset: 0;
         z-index: 2147483601;
@@ -641,24 +641,24 @@ export class QuickTypeMenu {
         font-family: "Avenir Next", "Segoe UI", sans-serif;
       }
 
-      .bpkeys-quick-wrapper.open {
+      .sigtastic-quick-wrapper.open {
         display: block;
       }
 
-      .bpkeys-quick-scrim {
+      .sigtastic-quick-scrim {
         position: absolute;
         inset: 0;
         background: transparent;
       }
 
-      .bpkeys-quick-anchor {
+      .sigtastic-quick-anchor {
         position: fixed;
         visibility: hidden;
         pointer-events: none;
-        anchor-name: --bpkeys-quick-anchor;
+        anchor-name: --sigtastic-quick-anchor;
       }
 
-      .bpkeys-quick-panel {
+      .sigtastic-quick-panel {
         position: fixed;
         width: min(280px, calc(100vw - 20px));
         min-height: 346px;
@@ -676,49 +676,49 @@ export class QuickTypeMenu {
         overflow: hidden;
       }
 
-      .bpkeys-quick-panel[data-anchored="true"] {
-        position-anchor: --bpkeys-quick-anchor;
+      .sigtastic-quick-panel[data-anchored="true"] {
+        position-anchor: --sigtastic-quick-anchor;
         top: anchor(top);
         left: anchor(right);
         margin-left: ${MENU_GUTTER}px;
         margin-top: -4px;
       }
 
-      .bpkeys-quick-panel[data-applying="true"] {
+      .sigtastic-quick-panel[data-applying="true"] {
         opacity: 0.92;
       }
 
-      .bpkeys-quick-header {
+      .sigtastic-quick-header {
         display: grid;
         gap: 2px;
         padding: 2px 2px 0;
       }
 
-      .bpkeys-quick-title {
+      .sigtastic-quick-title {
         margin: 0;
         font-size: 14px;
         font-weight: 600;
         letter-spacing: 0.01em;
       }
 
-      .bpkeys-quick-subtitle {
+      .sigtastic-quick-subtitle {
         font-size: 10px;
         color: rgba(243, 243, 243, 0.64);
       }
 
-      .bpkeys-quick-divider {
+      .sigtastic-quick-divider {
         height: 1px;
         background: rgba(255, 255, 255, 0.16);
       }
 
-      .bpkeys-quick-list {
+      .sigtastic-quick-list {
         display: grid;
         align-content: start;
         gap: 4px;
         overflow: auto;
       }
 
-      .bpkeys-quick-option {
+      .sigtastic-quick-option {
         display: grid;
         grid-template-columns: 28px minmax(0, 1fr) 70px 18px;
         align-items: center;
@@ -735,15 +735,15 @@ export class QuickTypeMenu {
         transition: background 120ms ease, border-color 120ms ease;
       }
 
-      .bpkeys-quick-option:hover,
-      .bpkeys-quick-option:focus-visible,
-      .bpkeys-quick-option[data-selected="true"] {
+      .sigtastic-quick-option:hover,
+      .sigtastic-quick-option:focus-visible,
+      .sigtastic-quick-option[data-selected="true"] {
         background: rgba(0, 0, 0, 0.18);
         border-color: rgba(255, 255, 255, 0.12);
         outline: none;
       }
 
-      .bpkeys-quick-icon {
+      .sigtastic-quick-icon {
         display: grid;
         place-items: center;
         width: 24px;
@@ -753,19 +753,19 @@ export class QuickTypeMenu {
         color: rgba(255, 255, 255, 0.92);
       }
 
-      .bpkeys-quick-icon svg {
+      .sigtastic-quick-icon svg {
         width: 16px;
         height: 16px;
       }
 
-      .bpkeys-quick-label {
+      .sigtastic-quick-label {
         font-size: 12px;
         line-height: 1.15;
         font-weight: 500;
         color: #f6f6f6;
       }
 
-      .bpkeys-quick-current {
+      .sigtastic-quick-current {
         grid-column: 3;
         justify-self: end;
         padding: 3px 7px;
@@ -778,7 +778,7 @@ export class QuickTypeMenu {
         color: rgba(243, 243, 243, 0.78);
       }
 
-      .bpkeys-quick-shortcut {
+      .sigtastic-quick-shortcut {
         grid-column: 4;
         justify-self: end;
         min-width: 10px;
@@ -790,13 +790,13 @@ export class QuickTypeMenu {
         transition: opacity 120ms ease, transform 120ms ease;
       }
 
-      .bpkeys-quick-panel[data-option-hints="true"] .bpkeys-quick-shortcut {
+      .sigtastic-quick-panel[data-option-hints="true"] .sigtastic-quick-shortcut {
         opacity: 1;
         transform: translateX(0);
       }
 
       @media (max-width: 720px) {
-        .bpkeys-quick-panel {
+        .sigtastic-quick-panel {
           width: min(250px, calc(100vw - 12px));
           min-height: 332px;
           max-height: min(390px, calc(100vh - 12px));
@@ -804,7 +804,7 @@ export class QuickTypeMenu {
           border-radius: 14px;
         }
 
-        .bpkeys-quick-option {
+        .sigtastic-quick-option {
           padding: 6px 8px;
         }
       }

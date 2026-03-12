@@ -46,40 +46,40 @@ export class FavoritesOverlay {
     this.actions = actions;
 
     this.host = document.createElement("div");
-    this.host.id = "bpkeys-overlay-host";
+    this.host.id = "sigtastic-overlay-host";
     this.root = this.host.attachShadow({ mode: "open" });
 
     const style = document.createElement("style");
     style.textContent = this.getStyles();
 
     this.wrapper = document.createElement("div");
-    this.wrapper.className = "bpkeys-wrapper";
+    this.wrapper.className = "sigtastic-wrapper";
     this.wrapper.tabIndex = -1;
 
     const scrim = document.createElement("div");
-    scrim.className = "bpkeys-scrim";
+    scrim.className = "sigtastic-scrim";
     scrim.addEventListener("click", () => this.close());
 
     const panel = document.createElement("section");
-    panel.className = "bpkeys-panel";
+    panel.className = "sigtastic-panel";
     panel.addEventListener("click", (event) => {
       event.stopPropagation();
     });
 
     const topRow = document.createElement("div");
-    topRow.className = "bpkeys-top-row";
+    topRow.className = "sigtastic-top-row";
 
     const searchShell = document.createElement("div");
-    searchShell.className = "bpkeys-search-shell";
+    searchShell.className = "sigtastic-search-shell";
 
     const searchIcon = document.createElement("span");
-    searchIcon.className = "bpkeys-search-icon";
+    searchIcon.className = "sigtastic-search-icon";
     searchIcon.setAttribute("aria-hidden", "true");
     searchIcon.innerHTML =
       '<svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="M16.1 16.1L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
     this.searchInput = document.createElement("input");
-    this.searchInput.className = "bpkeys-search";
+    this.searchInput.className = "sigtastic-search";
     this.searchInput.type = "text";
     this.searchInput.placeholder = "Search Components";
     this.searchInput.setAttribute("aria-label", "Search components");
@@ -100,25 +100,25 @@ export class FavoritesOverlay {
     topRow.append(searchShell);
 
     const divider = document.createElement("div");
-    divider.className = "bpkeys-divider";
+    divider.className = "sigtastic-divider";
 
     const listWrap = document.createElement("div");
-    listWrap.className = "bpkeys-list-wrap";
+    listWrap.className = "sigtastic-list-wrap";
     this.listWrap = listWrap;
 
     this.grid = document.createElement("div");
-    this.grid.className = "bpkeys-grid";
+    this.grid.className = "sigtastic-grid";
 
     this.emptyState = document.createElement("div");
-    this.emptyState.className = "bpkeys-empty";
+    this.emptyState.className = "sigtastic-empty";
 
     listWrap.append(this.grid, this.emptyState);
 
     const footerDivider = document.createElement("div");
-    footerDivider.className = "bpkeys-footer-divider";
+    footerDivider.className = "sigtastic-footer-divider";
 
     this.hintText = document.createElement("div");
-    this.hintText.className = "bpkeys-hints";
+    this.hintText.className = "sigtastic-hints";
     this.hintText.replaceChildren(
       this.createHintItem("Close", "Esc"),
       this.createHintSeparator(),
@@ -269,7 +269,7 @@ export class FavoritesOverlay {
 
     for (const favorite of items) {
       const card = document.createElement("button");
-      card.className = "bpkeys-card";
+      card.className = "sigtastic-card";
       card.type = "button";
       card.dataset.favoriteId = favorite.id;
       card.title = favorite.name;
@@ -307,7 +307,7 @@ export class FavoritesOverlay {
       );
 
       const label = document.createElement("div");
-      label.className = "bpkeys-card-label";
+      label.className = "sigtastic-card-label";
       label.textContent = displayContent;
 
       card.append(preview, label);
@@ -390,7 +390,7 @@ export class FavoritesOverlay {
   }
 
   private fitTypeLabelsToWidth(): void {
-    const labels = this.grid.querySelectorAll<HTMLElement>(".bpkeys-type-inline");
+    const labels = this.grid.querySelectorAll<HTMLElement>(".sigtastic-type-inline");
 
     for (const label of labels) {
       const fullText = label.dataset.fullText?.trim() ?? "";
@@ -463,14 +463,14 @@ export class FavoritesOverlay {
 
   private createHintItem(action: string, key: string): HTMLSpanElement {
     const item = document.createElement("span");
-    item.className = "bpkeys-hint-item";
+    item.className = "sigtastic-hint-item";
 
     const actionText = document.createElement("span");
-    actionText.className = "bpkeys-hint-action";
+    actionText.className = "sigtastic-hint-action";
     actionText.textContent = action;
 
     const keyText = document.createElement("span");
-    keyText.className = "bpkeys-hint-key";
+    keyText.className = "sigtastic-hint-key";
     keyText.textContent = key;
 
     item.append(actionText, keyText);
@@ -479,7 +479,7 @@ export class FavoritesOverlay {
 
   private createHintSeparator(): HTMLSpanElement {
     const separator = document.createElement("span");
-    separator.className = "bpkeys-hint-separator";
+    separator.className = "sigtastic-hint-separator";
     separator.textContent = "|";
     return separator;
   }
@@ -493,7 +493,7 @@ export class FavoritesOverlay {
     isDuplicate: boolean,
   ): HTMLDivElement {
     const preview = document.createElement("div");
-    preview.className = "bpkeys-preview";
+    preview.className = "sigtastic-preview";
     const stencil = shapeInfo.stencilId.toLowerCase();
     const primaryIconKind = this.getIconKind(stencil, shapeInfo);
     const topStencils = getTopLevelNonEdgeStencils(favorite.payload, 3).map(
@@ -514,13 +514,13 @@ export class FavoritesOverlay {
     preview.classList.add(shapeInfo.hasContent ? "has-content" : "is-empty");
     if (iconKinds.length > 1) {
       const stack = document.createElement("div");
-      stack.className = `bpkeys-preview-stack count-${Math.min(3, iconKinds.length)}`;
+      stack.className = `sigtastic-preview-stack count-${Math.min(3, iconKinds.length)}`;
 
       iconKinds.slice(0, 3).forEach((kind, index) => {
         const bubble = document.createElement("div");
-        bubble.className = `bpkeys-preview-bubble slot-${index + 1}`;
+        bubble.className = `sigtastic-preview-bubble slot-${index + 1}`;
         bubble.appendChild(
-          this.createIconSvgNode(kind, "bpkeys-preview-bubble-svg"),
+          this.createIconSvgNode(kind, "sigtastic-preview-bubble-svg"),
         );
         stack.appendChild(bubble);
       });
@@ -528,7 +528,7 @@ export class FavoritesOverlay {
       preview.appendChild(stack);
     } else {
       preview.appendChild(
-        this.createIconSvgNode(primaryIconKind, "bpkeys-preview-svg"),
+        this.createIconSvgNode(primaryIconKind, "sigtastic-preview-svg"),
       );
     }
 
@@ -537,7 +537,7 @@ export class FavoritesOverlay {
     }
 
     const typeLabel = document.createElement("div");
-    typeLabel.className = "bpkeys-type-inline";
+    typeLabel.className = "sigtastic-type-inline";
     typeLabel.dataset.fullText = displayName;
     typeLabel.textContent = displayName;
     typeLabel.setAttribute("title", displayName);
@@ -550,7 +550,7 @@ export class FavoritesOverlay {
 
     if (badgeKinds.length > 0) {
       const badgeRow = document.createElement("div");
-      badgeRow.className = "bpkeys-badge-row";
+      badgeRow.className = "sigtastic-badge-row";
 
       for (const kind of badgeKinds) {
         badgeRow.appendChild(this.getBadge(kind));
@@ -579,7 +579,7 @@ export class FavoritesOverlay {
 
   private getBadge(kind: UiBadgeKind): HTMLSpanElement {
     const badge = document.createElement("span");
-    badge.className = "bpkeys-badge";
+    badge.className = "sigtastic-badge";
 
     const icons: Record<UiBadgeKind, string> = {
       content:
@@ -617,7 +617,7 @@ export class FavoritesOverlay {
 
   private getTypeBadge(kind: TypeBadgeKind): HTMLDivElement {
     const badge = document.createElement("div");
-    badge.className = "bpkeys-type-badge-center";
+    badge.className = "sigtastic-type-badge-center";
 
     const icons: Record<TypeBadgeKind, string> = {
       user: '<circle cx="12" cy="8" r="3.6" fill="currentColor"/><path d="M4.8 20 C4.8 15.4 8 13 12 13 C16 13 19.2 15.4 19.2 20" fill="currentColor"/>',
@@ -1162,7 +1162,7 @@ export class FavoritesOverlay {
         box-sizing: border-box;
       }
 
-      .bpkeys-wrapper {
+      .sigtastic-wrapper {
         position: fixed;
         inset: 0;
         z-index: 2147483600;
@@ -1172,18 +1172,18 @@ export class FavoritesOverlay {
         font-family: "Avenir Next", "Segoe UI", sans-serif;
       }
 
-      .bpkeys-wrapper.open {
+      .sigtastic-wrapper.open {
         display: flex;
       }
 
-      .bpkeys-scrim {
+      .sigtastic-scrim {
         position: absolute;
         inset: 0;
         background: rgba(10, 12, 14, 0.2);
         backdrop-filter: blur(3px);
       }
 
-      .bpkeys-panel {
+      .sigtastic-panel {
         position: relative;
         width: min(900px, 95vw);
         min-height: min(520px, 74vh);
@@ -1200,12 +1200,12 @@ export class FavoritesOverlay {
         overflow: hidden;
       }
 
-      .bpkeys-top-row {
+      .sigtastic-top-row {
         display: flex;
         align-items: center;
       }
 
-      .bpkeys-search-shell {
+      .sigtastic-search-shell {
         width: 100%;
         display: flex;
         align-items: center;
@@ -1216,7 +1216,7 @@ export class FavoritesOverlay {
         padding: 8px 11px;
       }
 
-      .bpkeys-search-icon {
+      .sigtastic-search-icon {
         width: 18px;
         height: 18px;
         color: rgba(236, 236, 236, 0.88);
@@ -1224,12 +1224,12 @@ export class FavoritesOverlay {
         flex: 0 0 auto;
       }
 
-      .bpkeys-search-icon svg {
+      .sigtastic-search-icon svg {
         width: 100%;
         height: 100%;
       }
 
-      .bpkeys-search {
+      .sigtastic-search {
         width: 100%;
         border: none;
         outline: none;
@@ -1241,17 +1241,17 @@ export class FavoritesOverlay {
         letter-spacing: 0.01em;
       }
 
-      .bpkeys-search::placeholder {
+      .sigtastic-search::placeholder {
         color: rgba(236, 236, 236, 0.88);
       }
 
-      .bpkeys-divider {
+      .sigtastic-divider {
         height: 1px;
         border-radius: 999px;
         background: rgba(246, 246, 246, 0.22);
       }
 
-      .bpkeys-list-wrap {
+      .sigtastic-list-wrap {
         overflow-x: hidden;
         overflow-y: auto;
         min-height: 0;
@@ -1259,16 +1259,16 @@ export class FavoritesOverlay {
         margin: -12px 0;
       }
 
-      .bpkeys-list-wrap::-webkit-scrollbar {
+      .sigtastic-list-wrap::-webkit-scrollbar {
         width: 8px;
       }
 
-      .bpkeys-list-wrap::-webkit-scrollbar-thumb {
+      .sigtastic-list-wrap::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.16);
         border-radius: 999px;
       }
 
-      .bpkeys-grid {
+      .sigtastic-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 14px;
@@ -1277,7 +1277,7 @@ export class FavoritesOverlay {
         padding: 2px;
       }
 
-      .bpkeys-card {
+      .sigtastic-card {
         border: 1px solid transparent;
         display: grid;
         justify-items: center;
@@ -1293,18 +1293,18 @@ export class FavoritesOverlay {
         overflow: visible;
       }
 
-      .bpkeys-card:hover {
+      .sigtastic-card:hover {
         transform: translateY(-1px);
         box-shadow: 0 5px 16px -4px rgba(0, 0, 0, 0.4);
       }
 
-      .bpkeys-card.selected {
+      .sigtastic-card.selected {
         background: #474950b0;
         border-color: rgba(236, 236, 236, 0.72);
         box-shadow: 0 0 0 1px rgba(236, 236, 236, 0.18) inset;
       }
 
-      .bpkeys-preview {
+      .sigtastic-preview {
         width: 176px;
         height: 108px;
         border-radius: 14px;
@@ -1320,38 +1320,38 @@ export class FavoritesOverlay {
         box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
       }
 
-      .bpkeys-preview.rounded-bg {
+      .sigtastic-preview.rounded-bg {
         background: rgba(24, 28, 35, 0.84);
         border-color: rgba(228, 228, 228, 0.18);
       }
 
-      .bpkeys-preview.shape-only {
+      .sigtastic-preview.shape-only {
         border: none;
       }
 
-      .bpkeys-preview.has-content {
+      .sigtastic-preview.has-content {
         box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
       }
 
-      .bpkeys-preview.is-empty {
+      .sigtastic-preview.is-empty {
         box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
       }
 
-      .bpkeys-preview-svg {
+      .sigtastic-preview-svg {
         width: 80%;
         height: 100%;
         overflow: visible;
         transform: translateY(-8px);
       }
 
-      .bpkeys-preview-stack {
+      .sigtastic-preview-stack {
         position: relative;
         width: 100%;
         height: 100%;
         transform: translateY(-5px);
       }
 
-      .bpkeys-preview-bubble {
+      .sigtastic-preview-bubble {
         position: absolute;
         border-radius: 12px;
         background: #313338;
@@ -1360,13 +1360,13 @@ export class FavoritesOverlay {
         overflow: hidden;
       }
 
-      .bpkeys-preview-bubble-svg {
+      .sigtastic-preview-bubble-svg {
         width: 100%;
         height: 100%;
         overflow: visible;
       }
 
-.bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-1 {
+.sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-1 {
 	width: 69px;
 	height: 54px;
 	left: calc(50% - 69px);
@@ -1374,7 +1374,7 @@ export class FavoritesOverlay {
 	z-index: 1;
 }
 
-      .bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-2 {
+      .sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-2 {
         width: 69px;
         height: 54px;
         left: calc(50% + 3px);
@@ -1382,7 +1382,7 @@ export class FavoritesOverlay {
         z-index: 2;
       }
 
-.bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-1 {
+.sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-1 {
 	width: 52px;
 	height: 41px;
 	left: 23px;
@@ -1390,7 +1390,7 @@ export class FavoritesOverlay {
 	z-index: 1;
 }
 
-.bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-2 {
+.sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-2 {
 	width: 52px;
 	height: 41px;
 	left: 96px;
@@ -1398,7 +1398,7 @@ export class FavoritesOverlay {
 	z-index: 2;
 }
 
-.bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-3 {
+.sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-3 {
 	width: 52px;
 	height: 41px;
 	left: 50px;
@@ -1406,11 +1406,11 @@ export class FavoritesOverlay {
 	z-index: 3;
 }
 
-      .bpkeys-preview.is-empty .bpkeys-preview-svg {
+      .sigtastic-preview.is-empty .sigtastic-preview-svg {
         opacity: 0.94;
       }
 
-      .bpkeys-type-inline {
+      .sigtastic-type-inline {
         position: absolute;
         left: 10px;
         right: 10px;
@@ -1425,7 +1425,7 @@ export class FavoritesOverlay {
         pointer-events: none;
       }
 
-      .bpkeys-type-badge-center {
+      .sigtastic-type-badge-center {
         position: absolute;
         left: 50%;
         top: 44%;
@@ -1442,12 +1442,12 @@ export class FavoritesOverlay {
         pointer-events: none;
       }
 
-      .bpkeys-type-badge-center svg {
+      .sigtastic-type-badge-center svg {
         width: 25px;
         height: 25px;
       }
 
-      .bpkeys-badge-row {
+      .sigtastic-badge-row {
         position: absolute;
         top: -6px;
         right: -6px;
@@ -1455,7 +1455,7 @@ export class FavoritesOverlay {
         gap: 4px;
       }
 
-      .bpkeys-badge {
+      .sigtastic-badge {
         width: 23px;
         height: 23px;
         border-radius: 999px;
@@ -1467,12 +1467,12 @@ export class FavoritesOverlay {
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32);
       }
 
-      .bpkeys-badge svg {
+      .sigtastic-badge svg {
         width: 16px;
         height: 16px;
       }
 
-      .bpkeys-card-label {
+      .sigtastic-card-label {
         padding: 0 10px 8px 10px;
         font-size: 12px;
         font-weight: 600;
@@ -1489,20 +1489,20 @@ export class FavoritesOverlay {
         align-self: start;
       }
 
-      .bpkeys-empty {
+      .sigtastic-empty {
         display: none;
         font-size: 14px;
         color: rgba(243, 243, 243, 0.86);
         padding: 6px 2px;
       }
 
-      .bpkeys-footer-divider {
+      .sigtastic-footer-divider {
         height: 1px;
         border-radius: 999px;
         background: rgba(246, 246, 246, 0.22);
       }
 
-      .bpkeys-hints {
+      .sigtastic-hints {
         align-self: end;
         display: flex;
         flex-wrap: wrap;
@@ -1514,19 +1514,19 @@ export class FavoritesOverlay {
         margin: -8px 5px -13px 5px;
       }
 
-      .bpkeys-hint-item {
+      .sigtastic-hint-item {
         display: inline-flex;
         align-items: center;
         gap: 7px;
       }
 
-      .bpkeys-hint-action {
+      .sigtastic-hint-action {
         font-size: 12px;
         font-weight: 500;
         letter-spacing: 0.01em;
       }
 
-      .bpkeys-hint-key {
+      .sigtastic-hint-key {
         font-size: 11px;
         font-weight: 700;
         line-height: 1;
@@ -1537,14 +1537,14 @@ export class FavoritesOverlay {
         color: #f2f2f2;
       }
 
-      .bpkeys-hint-separator {
+      .sigtastic-hint-separator {
         margin: 0 3px;
         font-size: 12px;
         color: rgba(243, 243, 243, 0.44);
       }
 
       @media (max-width: 1000px) {
-        .bpkeys-panel {
+        .sigtastic-panel {
           width: min(900px, calc(100vw - 12px));
           min-height: min(500px, calc(100vh - 12px));
           max-height: calc(100vh - 12px);
@@ -1553,23 +1553,23 @@ export class FavoritesOverlay {
           gap: 9px;
         }
 
-        .bpkeys-search {
+        .sigtastic-search {
           font-size: 15px;
         }
 
-        .bpkeys-grid {
+        .sigtastic-grid {
           grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
           gap: 10px;
         }
 
-        .bpkeys-card {
+        .sigtastic-card {
           height: auto;
           min-height: 0;
           grid-template-rows: auto auto;
           border-radius: 18px;
         }
 
-        .bpkeys-preview {
+        .sigtastic-preview {
           width: min(100%, 120px);
           height: 86px;
           border-radius: 14px;
@@ -1577,90 +1577,90 @@ export class FavoritesOverlay {
           padding-bottom: 12px;
         }
 
-        .bpkeys-preview-svg {
+        .sigtastic-preview-svg {
           transform: translateY(-4px);
         }
 
-        .bpkeys-preview-stack {
+        .sigtastic-preview-stack {
           transform: translateY(-3px);
         }
 
-        .bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-1 {
+        .sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-1 {
           width: 44px;
           height: 32px;
           left: calc(50% - 45px);
           top: 21px;
         }
 
-        .bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-2 {
+        .sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-2 {
           width: 44px;
           height: 32px;
           left: calc(50% + 1px);
           top: 15px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-1 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-1 {
           width: 38px;
           height: 28px;
           left: 8px;
           top: 28px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-2 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-2 {
           width: 38px;
           height: 28px;
           left: 56px;
           top: 20px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-3 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-3 {
           width: 38px;
           height: 28px;
           left: 32px;
           top: 8px;
         }
 
-        .bpkeys-type-badge-center {
+        .sigtastic-type-badge-center {
           width: 32px;
           height: 32px;
           top: 50%;
         }
 
-        .bpkeys-type-badge-center svg {
+        .sigtastic-type-badge-center svg {
           width: 20px;
           height: 20px;
         }
 
-        .bpkeys-type-inline {
+        .sigtastic-type-inline {
           left: 8px;
           right: 8px;
           bottom: 4px;
           font-size: 11px;
         }
 
-        .bpkeys-card-label {
+        .sigtastic-card-label {
           font-size: 11px;
           padding: 0 8px 8px;
           max-height: calc(1.2em * 3);
         }
 
-        .bpkeys-hints {
+        .sigtastic-hints {
           gap: 6px;
           row-gap: 5px;
         }
 
-        .bpkeys-hint-action {
+        .sigtastic-hint-action {
           font-size: 11px;
         }
 
-        .bpkeys-hint-key {
+        .sigtastic-hint-key {
           font-size: 10px;
           padding: 3px 6px;
         }
       }
 
       @media (max-width: 700px) {
-        .bpkeys-panel {
+        .sigtastic-panel {
           width: calc(100vw - 10px);
           min-height: min(460px, calc(100vh - 10px));
           max-height: calc(100vh - 10px);
@@ -1669,86 +1669,86 @@ export class FavoritesOverlay {
           gap: 8px;
         }
 
-        .bpkeys-grid {
+        .sigtastic-grid {
           grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
           gap: 8px;
         }
 
-        .bpkeys-card {
+        .sigtastic-card {
           height: auto;
           min-height: 0;
           grid-template-rows: auto auto;
           border-radius: 16px;
         }
 
-        .bpkeys-preview {
+        .sigtastic-preview {
           width: min(100%, 112px);
           height: 82px;
           margin-top: 8px;
           margin-bottom: 5px;
         }
 
-        .bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-1 {
+        .sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-1 {
           width: 40px;
           height: 30px;
           left: calc(50% - 42px);
           top: 20px;
         }
 
-        .bpkeys-preview-stack.count-2 .bpkeys-preview-bubble.slot-2 {
+        .sigtastic-preview-stack.count-2 .sigtastic-preview-bubble.slot-2 {
           width: 40px;
           height: 30px;
           left: calc(50% + 2px);
           top: 14px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-1 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-1 {
           width: 35px;
           height: 26px;
           left: 8px;
           top: 27px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-2 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-2 {
           width: 35px;
           height: 26px;
           left: 52px;
           top: 19px;
         }
 
-        .bpkeys-preview-stack.count-3 .bpkeys-preview-bubble.slot-3 {
+        .sigtastic-preview-stack.count-3 .sigtastic-preview-bubble.slot-3 {
           width: 35px;
           height: 26px;
           left: 30px;
           top: 8px;
         }
 
-        .bpkeys-type-badge-center {
+        .sigtastic-type-badge-center {
           width: 30px;
           height: 30px;
           top: 50%;
         }
 
-        .bpkeys-type-badge-center svg {
+        .sigtastic-type-badge-center svg {
           width: 18px;
           height: 18px;
         }
 
-        .bpkeys-card-label {
+        .sigtastic-card-label {
           font-size: 10px;
           padding: 0 7px 7px;
         }
 
-        .bpkeys-hints {
+        .sigtastic-hints {
           gap: 5px;
           row-gap: 4px;
         }
 
-        .bpkeys-hint-action {
+        .sigtastic-hint-action {
           font-size: 10px;
         }
 
-        .bpkeys-hint-key {
+        .sigtastic-hint-key {
           font-size: 9px;
           padding: 3px 5px;
         }

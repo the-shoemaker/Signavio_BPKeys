@@ -1,7 +1,7 @@
 import { sanitizePayloadForReuse } from "../shared/payload";
 import type { ClipboardRequestTemplate } from "../shared/types";
 
-export const CONTENT_SOURCE = "signavio-bpkeys-content";
+export const CONTENT_SOURCE = "sigtastic-content";
 
 export type ClipboardWriteRequestMessage = {
   source: typeof CONTENT_SOURCE;
@@ -15,7 +15,7 @@ export type ClipboardWriteRequestMessage = {
 };
 
 export type ClipboardWriteResultMessage = {
-  source: "signavio-bpkeys-hook";
+  source: "sigtastic-hook";
   type: "clipboard-write-result";
   requestId: string;
   ok: boolean;
@@ -32,7 +32,7 @@ export function isClipboardWriteResultMessage(
 
   const candidate = value as Record<string, unknown>;
   return (
-    candidate.source === "signavio-bpkeys-hook" &&
+    candidate.source === "sigtastic-hook" &&
     candidate.type === "clipboard-write-result" &&
     typeof candidate.requestId === "string" &&
     typeof candidate.ok === "boolean"

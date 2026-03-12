@@ -1,4 +1,4 @@
-# AGENTS Notes — Signavio BPKeys
+# AGENTS Notes — Sigtastic
 
 Updated: 2026-03-06
 
@@ -122,7 +122,7 @@ This file records odd/tricky implementation details for future agents.
 - Quick-edit selection detection was widened:
   - supports selection from getter or state fields (`selection`, `currentSelection`, etc.)
   - shallow recursive scan through likely facade/editor containers
-- Debug helper exposed in page context: `window.__bpkeysQuickEditDebug()`
+- Debug helper exposed in page context: `window.__sigtasticQuickEditDebug()`
 
 ## Search Behavior
 
@@ -160,8 +160,8 @@ This file records odd/tricky implementation details for future agents.
   - task type changes should use the visible ExtJS property-row DOM, not hidden model mutation hooks
 - `public/clipboard-hook.js` now falls back to DOM-driven task-type changes via `applyTaskTypeActionDom()` and treats pointer/property-panel context as valid selection for quick edit.
 - If quick edit regresses again, inspect the live property row/options first with:
-  - `window.__bpkeysVisibleActionables()`
-  - `window.__bpkeysTaskTypeDom()`
+  - `window.__sigtasticVisibleActionables()`
+  - `window.__sigtasticTaskTypeDom()`
 
 ## Quick Edit Removal
 

@@ -57,6 +57,6 @@ export type EditorSelectionInfo = {
 };
 
 export type ContentMessage =
-  | { type: "BPKEYS_TOGGLE_OVERLAY" }
-  | { type: "BPKEYS_SAVE_FAVORITE" }
-  | { type: "BPKEYS_TOGGLE_QUICK_MENU" };
+  | { type: "SIGTASTIC_TOGGLE_OVERLAY" }
+  | { type: "SIGTASTIC_SAVE_FAVORITE" }
+  | { type: "SIGTASTIC_TOGGLE_QUICK_MENU" };

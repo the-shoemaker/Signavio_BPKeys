@@ -1,4 +1,4 @@
-# Signavio BPKeys Extension — Execution Plan (WXT + Firefox)
+# Sigtastic Extension — Execution Plan (WXT + Firefox)
 
 Date: 2026-03-06
 
